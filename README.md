@@ -127,3 +127,6 @@ This project satisfies all requirements:
 - Data quality checks
 - Clean dataset export
 - Reproducibility
+
+## Project Repository:
+https://github.com/phungnhatminh2006-bit/SQL_FIRMDATAHUB_FINAL.git
