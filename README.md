@@ -54,5 +54,6 @@ The system implements the following validation rules:
 - Current liabilities must be non-negative
 - Growth ratio must fall within a configurable range (e.g., [-0.95, 5.0])
 - Market value consistency check: market_value ≈ shares_outstanding × share_price
+
 **All validation errors are recorded in qc_report.csv**
 
