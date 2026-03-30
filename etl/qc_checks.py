@@ -140,17 +140,20 @@ LEFT JOIN inn_clean inn
 ORDER BY f.ticker, fy.fiscal_year
 """
 
+# ===== LOAD DATA =====
 df = pd.read_sql(query, conn)
-
 print(f"Loaded {df.shape[0]} rows for QC")
 
 # ===== QC CHECKS =====
 errors = []
+passed_count = 0
 
 for _, row in df.iterrows():
 
     ticker = row["ticker"]
     year = row["fiscal_year"]
+
+    row_errors = []
 
     # ===== 1. OWNERSHIP [0,1] =====
     for col in [
@@ -161,7 +164,7 @@ for _, row in df.iterrows():
     ]:
         val = row[col]
         if pd.notna(val) and (val < 0 or val > 1):
-            errors.append({
+            row_errors.append({
                 "ticker": ticker,
                 "fiscal_year": year,
                 "field_name": col,
@@ -171,7 +174,7 @@ for _, row in df.iterrows():
 
     # ===== 2. SHARES > 0 =====
     if pd.notna(row["shares_outstanding"]) and row["shares_outstanding"] <= 0:
-        errors.append({
+        row_errors.append({
             "ticker": ticker,
             "fiscal_year": year,
             "field_name": "shares_outstanding",
@@ -181,7 +184,7 @@ for _, row in df.iterrows():
 
     # ===== 3. TOTAL ASSETS >= 0 =====
     if pd.notna(row["total_assets"]) and row["total_assets"] < 0:
-        errors.append({
+        row_errors.append({
             "ticker": ticker,
             "fiscal_year": year,
             "field_name": "total_assets",
@@ -191,7 +194,7 @@ for _, row in df.iterrows():
 
     # ===== 4. CURRENT LIABILITIES >= 0 =====
     if pd.notna(row["current_liabilities"]) and row["current_liabilities"] < 0:
-        errors.append({
+        row_errors.append({
             "ticker": ticker,
             "fiscal_year": year,
             "field_name": "current_liabilities",
@@ -201,7 +204,7 @@ for _, row in df.iterrows():
 
     # ===== 5. GROWTH RANGE =====
     if pd.notna(row["growth_ratio"]) and not (-0.95 <= row["growth_ratio"] <= 5):
-        errors.append({
+        row_errors.append({
             "ticker": ticker,
             "fiscal_year": year,
             "field_name": "growth_ratio",
@@ -215,7 +218,7 @@ for _, row in df.iterrows():
         actual = row["market_value_equity"]
 
         if expected > 0 and abs(actual - expected) / expected > 0.2:
-            errors.append({
+            row_errors.append({
                 "ticker": ticker,
                 "fiscal_year": year,
                 "field_name": "market_value_equity",
@@ -226,7 +229,7 @@ for _, row in df.iterrows():
     # ===== 7. TEXT LENGTH =====
     note = row.get("evidence_note")
     if note is not None and len(str(note)) > 500:
-        errors.append({
+        row_errors.append({
             "ticker": ticker,
             "fiscal_year": year,
             "field_name": "evidence_note",
@@ -234,14 +237,41 @@ for _, row in df.iterrows():
             "message": "exceeds 500 characters"
         })
 
+    # ===== FINAL CHECK =====
+    if len(row_errors) == 0:
+        passed_count += 1
+    else:
+        errors.extend(row_errors)
+
 # ===== EXPORT =====
-qc_df = pd.DataFrame(errors)
+total_rows = len(df)
 
-qc_df.to_csv("outputs/qc_report.csv", index=False)
+if len(errors) == 0:
+    qc_df = df[["ticker", "fiscal_year"]].copy()
+    qc_df["status"] = "OK"
 
-conn.close()
+    qc_df.to_csv("outputs/qc_report.csv", index=False)
 
-# ===== SUMMARY =====
-print(f"QC done")
-print(f"Total errors: {len(qc_df)}")
-print("Saved: outputs/qc_report.csv")
+    print("\n===== QC SUMMARY =====")
+    print(f"Total rows checked : {total_rows}")
+    print(f"Rows passed QC     : {total_rows}")
+    print("Total errors       : 0")
+    print("Data quality tốt – toàn bộ dữ liệu hợp lệ")
+    print("File outputs/qc_report.csv = danh sách data OK")
+
+else:
+    qc_df = pd.DataFrame(errors)
+    qc_df.to_csv("outputs/qc_report.csv", index=False)
+
+    print("\n===== QC SUMMARY =====")
+    print(f"Total rows checked : {total_rows}")
+    print(f"Rows passed QC     : {total_rows - len(qc_df)}")
+    print(f"Total errors       : {len(qc_df)}")
+    print(f"Data có lỗi – xem outputs/qc_report.csv")
+
+    # breakdown lỗi
+    print("\nTop error types:")
+    print(qc_df["error_type"].value_counts())
+
+    print("\nTop error fields:")
+    print(qc_df["field_name"].value_counts())
