@@ -1,4 +1,4 @@
-# SQL_FIRMDATAHUB
+# SQL_FIRMDATAHUB - TEAM 11
 
 ## Group member
 | Name | Student ID | Role & Responsibilities | Contribution |
@@ -55,7 +55,7 @@ View
 
 ## 4. Project Structure
 ```text
-TEAM_<>_FirmDataHub/
+TEAM_11_FirmDataHub/
 │
 ├── sql/
 │   └── schema_and_seed.sql
