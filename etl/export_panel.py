@@ -188,7 +188,7 @@ print("\n Missing values:")
 print(df.isna().sum())
 
 # ===== EXPORT =====
-df.to_csv("outputs/panel_latest.csv", index=False)
+df.to_csv("outputs/panel_latest.csv", index=False, encoding="utf-8-sig")
 
 conn.close()
 
