@@ -8,6 +8,25 @@
 | **Tran Viet Long** |  |  |  |
 | **Ngo Manh Duy** |  |  |  |
 
+## 1. Project Overview
+
+This project develops a Firm Data Hub, a centralized system designed to store, validate, version, and export panel data of Vietnamese listed firms for the period 2020–2024.
+
+The system manages:
+- Firm master data (ticker, company name, exchange, industry)
+- Panel dataset with 38 variables per firm-year
+- Data quality validation (QC)
+- Snapshot-based version control
+- Clean dataset extraction for analysis
+
+## 2. Objectives
+The main objectives of this project are:
+- Design a relational database using DIM–FACT–SNAPSHOT architecture
+- Build ETL pipelines to import and process firm-level data
+- Implement data quality checks (QC)
+- Enable version control via snapshot mechanism
+- Export a clean and analysis-ready panel dataset
+
 ## Project Structure
 ```text
 TEAM_<>_FirmDataHub/
@@ -57,3 +76,4 @@ The system implements the following validation rules:
 
 **All validation errors are recorded in qc_report.csv**
 
+## Output files
