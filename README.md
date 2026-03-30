@@ -3,10 +3,10 @@
 ## Group member
 | Name | Student ID | Role & Responsibilities | Contribution |
 |------|------------|-------------------------|--------------|
-| **Vu Tran Cat Linh** | 11245899 | **Team Leader:**  |  |
+| **Vu Tran Cat Linh** | 11245899 | **Team Leader**  |  |
 | **Phung Nhat Minh** | 11245910 |  |  |
-| **Tran Viet Long** |  |  |  |
-| **Ngo Manh Duy** |  |  |  |
+| **Tran Viet Long** | 11245868 |  |  |
+| **Ngo Manh Duy** | 11245901 |  |  |
 
 ## 1. Project Overview
 
@@ -34,6 +34,7 @@ Dimension Tables (DIM)
 - `dim_exchange`
 - `dim_industry_l2`
 - `dim_data_source`
+
 Fact Tables (FACT)
 - `fact_ownership_year`
 - `fact_financial_year`
@@ -41,10 +42,13 @@ Fact Tables (FACT)
 - `fact_market_year`
 - `fact_innovation_year`
 - `fact_firm_year_meta`
+
 Snapshot Versioning
 - `fact_data_snapshot`
+
 Audit
 - `fact_value_override_log`
+
 View
 - `vw_firm_panel_latest (final dataset for analysis)`
 **All fact tables use composite keys (firm_id, fiscal_year, snapshot_id) to ensure version control and data consistency.
@@ -100,6 +104,7 @@ The system implements the following validation rules:
 
 ## 8. Output Dataset
 `panel_latest.csv`
+
 Contains:
 - ticker
 - fiscal_year
@@ -109,9 +114,9 @@ This dataset is extracted from the latest snapshot per firm-year, ensuring consi
 
 ## 9. Evaluation Coverage
 This project satisfies all requirements:
-✅ Database schema with constraints and views
-✅ ETL pipeline (firms + panel)
-✅ Snapshot versioning
-✅ Data quality checks
-✅ Clean dataset export
-✅ Reproducibility
+- Database schema with constraints and views
+- ETL pipeline (firms + panel)
+- Snapshot versioning
+- Data quality checks
+- Clean dataset export
+- Reproducibility
