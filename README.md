@@ -82,16 +82,23 @@ TEAM_11_FirmDataHub/
 - Number of firms: 20
 - Time period: 2020–2024
 - Total observations: 100 firm-year records
-- Number of variables: 
+- Number of variables: 38
 
-## 6. Data Pipeline
+## 6. Data Sources
+Data is collected from:
+- Audited financial statements (BCTC)
+- Vietstock
+- Annual reports
+- Manual entry
+
+## 7. Data Pipeline
 - **Step 1:** Import firm master data
 - **Step 2:** Create snapshot
 - **Step 3:** Import panel data
 - **Step 4:** Run data quality check
 - **Step 5:** Export clean dataset
 
-## 7. Data Quality Checks (QC)
+## 8. Data Quality Checks (QC)
 The system implements the following validation rules:
 - Ownership ratios must be within [0, 1]
 - Shares outstanding must be greater than 0
@@ -102,7 +109,7 @@ The system implements the following validation rules:
 
 **All validation errors are recorded in `qc_report.csv`**
 
-## 8. Output Dataset
+## 9. Output Dataset
 `panel_latest.csv`
 
 Contains:
@@ -112,7 +119,7 @@ Contains:
 
 This dataset is extracted from the latest snapshot per firm-year, ensuring consistency and version control.
 
-## 9. Evaluation Coverage
+## 10. Evaluation Coverage
 This project satisfies all requirements:
 - Database schema with constraints and views
 - ETL pipeline (firms + panel)
